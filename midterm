@@ -1,0 +1,177 @@
+// CST 122 Midterm Trevor Gregory
+String title = " A Tail of the Sea ";
+String author = " Trevor Gregory: CST 112";
+float xFish, yFish; //variables for the fish position
+float xCrawler, yCrawler; //variables for the crawler position
+float fishspeed; // variable for fishspeed
+float fishspeedY; //variable for fishspeed y axis
+float left,right,top,bottom;
+int boatscore,crawlerscore,tunascore;
+float fishtail;
+float xBoat,yBoat;
+Boat myBoat;
+
+void setup(){
+  size( 800,600); // screen size
+  stroke(50);
+  strokeWeight(1);
+  left = 10;
+  right = width -10;
+  top = height/3;
+  bottom = height;
+  xFish= width/2;
+  yFish=height/2;
+  fishspeed = 1;
+  fishspeedY= 2;
+  fishtail = 5;
+  xCrawler = 500;
+  yCrawler = 550;
+  boatscore = 0;
+  tunascore = 0;
+  crawlerscore = 0;
+  myBoat = new Boat();
+}
+
+void scene(){ // sets the scene background
+  background(135,206,235); //background color
+  fill(46,139,87);
+  rect(0,height/4, width, height*3/4);
+}
+  
+void reset(){ // Resets the program when key is pressed
+  
+  xFish= width/2;
+  yFish= height/2;
+ 
+}
+
+void draw(){ // Loops the functions in the program
+  scene();
+  fish();
+  crawler();
+  action();
+  messages();
+  myBoat.drive();
+  myBoat.display();
+}
+ 
+void fish(){  // Fish drawing
+
+  int mouth;
+  fill(255,192,203);
+  triangle(xFish-30,yFish,xFish+30,yFish,xFish,yFish-50);
+  triangle(xFish-100+fishtail,yFish-20,xFish-100+fishtail,yFish+20,xFish,yFish);
+  ellipse(xFish,yFish,120,50);
+  fill(255,255,255);
+  ellipse(xFish+40,yFish-18,12,12);
+  fill(0);
+  ellipse(xFish+40,yFish-18,5,5);
+  fill(255,0,0);
+  line(xFish+30,yFish,xFish+40,yFish+20);
+  fishtail=fishtail *-1;
+}
+
+void crawler(){  // Crawler drawing
+  
+  fill(255,255,0);
+  ellipse(xCrawler,yCrawler,80,40);
+  fill (0,255,255);
+  rect (xCrawler-70,yCrawler-5,30,10);
+  rect (xCrawler+40,yCrawler-5,30,10);
+  fill (255,0,255);
+  rect (xCrawler-30,yCrawler+15,10,10);
+  rect (xCrawler-30,yCrawler-25,10,10);
+  rect (xCrawler+20,yCrawler-25,10,10);
+  rect (xCrawler+20,yCrawler+15,10,10);
+  
+}
+
+void action(){  // Function for movement
+
+if (xFish < left || xFish > right) fishspeed = fishspeed=-fishspeed;
+
+if (yFish > height-100 ) {
+  fishspeedY = -fishspeedY;
+}
+else if (yFish < top ){
+   fishspeedY = -fishspeedY;
+}
+
+xFish = xFish +fishspeed;
+yFish = yFish +fishspeedY;
+
+}
+void messages(){ //Text function 
+  fill(0);
+  textSize(20);
+  text(title, width/2.5,20);
+  textSize(12);
+  text("Catch fish by clicking on boat or crawler.", width/3,40);
+  text("(Or use keys: 'b' for boat, 'c' for crawler, r to reset, q to quit.)",width/3,60 );
+  fill(0);
+  textSize(12);
+  text(author,width/40,height/1.01);
+  fill(0);
+  text("Mr. Crabs", xCrawler-25,yCrawler);
+  text("Nemo", xFish-20, yFish);
+  text(" Your score is:"+boatscore,10,10 );
+  text("BOAT:", width/1.2, 20);
+  text("TUNA:", width/1.2, 35);
+  text("CRAB:", width/1.2, 50);
+  text(tunascore, xFish-10, yFish+15);
+  text(crawlerscore, xCrawler-10, yCrawler+15);
+  
+}
+
+void mousePressed(){
+   if (dist(xFish,yFish,xBoat,yBoat) < 20){ // Adds to boatscore when boat by fish
+    boatscore = boatscore + 1;
+  
+}
+}
+
+void keyPressed(){ 
+ 
+ if ((key == 'b') && (dist(xFish,yFish,xBoat,yBoat) < 20)){ // Adds to boatscore when boat by fish
+    boatscore = boatscore + 1;
+  }
+  
+  if ((key == 'c') && (dist(xCrawler,yCrawler,xFish,yFish) < 20)){
+    crawlerscore = crawlerscore + 1;
+  } 
+  if (key == 'q') {
+    exit();
+  }
+  
+  if (key == 'r') {
+    reset();
+  }
+    
+}
+
+class Boat {  // Class for the red boat
+  float xBoat; 
+  float yBoat;
+  float boatspeed;
+  
+ Boat(){
+     xBoat= width/2;
+     yBoat= 100;
+     boatspeed = 2;
+ }
+ void drive(){
+   if (xBoat < left || xBoat > right) boatspeed = boatspeed=-boatspeed;
+   xBoat = xBoat +boatspeed;
+ }
+ 
+  void display(){
+    
+  fill(255,0,0); //boat color
+  rect(xBoat,yBoat,100,50); //boat hull
+  triangle(xBoat-50,yBoat,xBoat,yBoat+50,xBoat,yBoat); // bow
+  rect(xBoat+30,yBoat-30,40,30); // wheelhouse
+  fill(0);
+  text("skip to my lou",xBoat+5,yBoat+20);
+  text(boatscore, xBoat+45, yBoat-15);
+  }
+}
